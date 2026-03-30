@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-// validateSize ensures size is a positive integer.
+	// validateSize ensures size is a positive integer.
 func validateSize(size int) error {
 	if size <= 0 {
 		return errors.New("size must be a positive integer")
@@ -13,8 +13,19 @@ func validateSize(size int) error {
 	return nil
 }
 
-// RightTriangle generates a right-aligned growing triangle of stars.
-// For size N, it returns N rows where row i contains i stars.
+// makeLine builds a string with leftPad spaces followed by starCount '*' characters.
+func makeLine(leftPad, starCount int) string {
+	if leftPad < 0 {
+		leftPad = 0
+	}
+	if starCount < 0 {
+		starCount = 0
+	}
+	return strings.Repeat(" ", leftPad) + strings.Repeat("*", starCount)
+}
+
+	// RightTriangle generates a left-aligned growing triangle of stars.
+	// For size N, it returns N rows where row i contains i stars.
 func RightTriangle(size int) ([]string, error) {
 	if err := validateSize(size); err != nil {
 		return nil, err
@@ -34,9 +45,7 @@ func CenteredPyramid(size int) ([]string, error) {
 	}
 	out := make([]string, 0, size)
 	for i := 1; i <= size; i++ {
-		spaces := strings.Repeat(" ", size-i)
-		stars := strings.Repeat("*", 2*i-1)
-		out = append(out, spaces+stars)
+		out = append(out, makeLine(size-i, 2*i-1))
 	}
 	return out, nil
 }
@@ -51,15 +60,11 @@ func Diamond(size int) ([]string, error) {
 	out := make([]string, 0, 2*size-1)
 	// Top half including middle row.
 	for i := 1; i <= size; i++ {
-		spaces := strings.Repeat(" ", size-i)
-		stars := strings.Repeat("*", 2*i-1)
-		out = append(out, spaces+stars)
+		out = append(out, makeLine(size-i, 2*i-1))
 	}
 	// Bottom half.
 	for i := size - 1; i >= 1; i-- {
-		spaces := strings.Repeat(" ", size-i)
-		stars := strings.Repeat("*", 2*i-1)
-		out = append(out, spaces+stars)
+		out = append(out, makeLine(size-i, 2*i-1))
 	}
 	return out, nil
 }

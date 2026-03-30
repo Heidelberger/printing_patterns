@@ -1,94 +1,121 @@
 package patterns
 
 import (
+	"fmt"
 	"reflect"
 	"testing"
 )
 
 func TestRightTriangle(t *testing.T) {
-	got, err := RightTriangle(3)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
+	tests := []struct {
+		size int
+		want []string
+	}{
+		{1, []string{"*"}},
+		{3, []string{"*", "**", "***"}},
 	}
-	want := []string{
-		"*",
-		"**",
-		"***",
-	}
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("RightTriangle(3) = %#v, want %#v", got, want)
+	for _, tt := range tests {
+		t.Run(fmt.Sprintf("size_%d", tt.size), func(t *testing.T) {
+			got, err := RightTriangle(tt.size)
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("RightTriangle(%d) = %#v, want %#v", tt.size, got, tt.want)
+			}
+		})
 	}
 }
 
 func TestCenteredPyramid(t *testing.T) {
-	got, err := CenteredPyramid(3)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
+	tests := []struct {
+		size int
+		want []string
+	}{
+		{1, []string{"*"}},
+		{3, []string{"  *", " ***", "*****"}},
 	}
-	want := []string{
-		"  *",
-		" ***",
-		"*****",
-	}
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("CenteredPyramid(3) = %#v, want %#v", got, want)
+	for _, tt := range tests {
+		t.Run(fmt.Sprintf("size_%d", tt.size), func(t *testing.T) {
+			got, err := CenteredPyramid(tt.size)
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("CenteredPyramid(%d) = %#v, want %#v", tt.size, got, tt.want)
+			}
+		})
 	}
 }
 
 func TestDiamond(t *testing.T) {
-	got, err := Diamond(3)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
+	tests := []struct {
+		size int
+		want []string
+	}{
+		{1, []string{"*"}},
+		{3, []string{"  *", " ***", "*****", " ***", "  *"}},
 	}
-	want := []string{
-		"  *",
-		" ***",
-		"*****",
-		" ***",
-		"  *",
-	}
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("Diamond(3) = %#v, want %#v", got, want)
+	for _, tt := range tests {
+		t.Run(fmt.Sprintf("size_%d", tt.size), func(t *testing.T) {
+			got, err := Diamond(tt.size)
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Diamond(%d) = %#v, want %#v", tt.size, got, tt.want)
+			}
+		})
 	}
 }
 
 func TestHollowSquare(t *testing.T) {
-	got, err := HollowSquare(4)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
+	tests := []struct {
+		size int
+		want []string
+	}{
+		{1, []string{"*"}},
+		{4, []string{"****", "*  *", "*  *", "****"}},
 	}
-	want := []string{
-		"****",
-		"*  *",
-		"*  *",
-		"****",
-	}
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("HollowSquare(4) = %#v, want %#v", got, want)
+	for _, tt := range tests {
+		t.Run(fmt.Sprintf("size_%d", tt.size), func(t *testing.T) {
+			got, err := HollowSquare(tt.size)
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("HollowSquare(%d) = %#v, want %#v", tt.size, got, tt.want)
+			}
+		})
 	}
 }
 
 func TestRightPascal(t *testing.T) {
-	got, err := RightPascal(3)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
+	tests := []struct {
+		size int
+		want []string
+	}{
+		{1, []string{"*"}},
+		{3, []string{"*", "**", "***", "**", "*"}},
 	}
-	want := []string{
-		"*",
-		"**",
-		"***",
-		"**",
-		"*",
-	}
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("RightPascal(3) = %#v, want %#v", got, want)
+	for _, tt := range tests {
+		t.Run(fmt.Sprintf("size_%d", tt.size), func(t *testing.T) {
+			got, err := RightPascal(tt.size)
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("RightPascal(%d) = %#v, want %#v", tt.size, got, tt.want)
+			}
+		})
 	}
 }
 
 func TestInvalidSizes(t *testing.T) {
+	type gen func(int) ([]string, error)
 	cases := []struct {
 		name string
-		fn   func(int) ([]string, error))
+		fn   gen
 	}{
 		{"RightTriangle", RightTriangle},
 		{"CenteredPyramid", CenteredPyramid},
@@ -97,9 +124,12 @@ func TestInvalidSizes(t *testing.T) {
 		{"RightPascal", RightPascal},
 	}
 	for _, tc := range cases {
-		_, err := tc.fn(0)
-		if err == nil {
-			t.Errorf("%s(0) expected error, got nil", tc.name)
+		for _, bad := range []int{0, -2} {
+			t.Run(fmt.Sprintf("%s_bad_%d", tc.name, bad), func(t *testing.T) {
+				if _, err := tc.fn(bad); err == nil {
+					t.Fatalf("%s(%d) expected error, got nil", tc.name, bad)
+				}
+			})
 		}
 	}
 }
