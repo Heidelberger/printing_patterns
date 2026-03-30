@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-	// validateSize ensures size is a positive integer.
+ // validateSize ensures size is a positive integer.
 func validateSize(size int) error {
 	if size <= 0 {
 		return errors.New("size must be a positive integer")
@@ -24,8 +24,8 @@ func makeLine(leftPad, starCount int) string {
 	return strings.Repeat(" ", leftPad) + strings.Repeat("*", starCount)
 }
 
-	// RightTriangle generates a left-aligned growing triangle of stars.
-	// For size N, it returns N rows where row i contains i stars.
+ // RightTriangle generates a left-aligned growing triangle of stars.
+ // For size N, it returns N rows where row i contains i stars.
 func RightTriangle(size int) ([]string, error) {
 	if err := validateSize(size); err != nil {
 		return nil, err
