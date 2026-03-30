@@ -15,6 +15,24 @@ func generators() map[string]func(int) ([]string, error) {
 		"diamond":          patterns.Diamond,
 		"hollow-square":    patterns.HollowSquare,
 		"right-pascal":     patterns.RightPascal,
+		"all": func(size int) ([]string, error) {
+			funcs := []func(int) ([]string, error){
+				patterns.RightTriangle,
+				patterns.CenteredPyramid,
+				patterns.Diamond,
+				patterns.HollowSquare,
+				patterns.RightPascal,
+			}
+			out := make([]string, 0)
+			for _, f := range funcs {
+				lines, err := f(size)
+				if err != nil {
+					return nil, err
+				}
+				out = append(out, lines...)
+			}
+			return out, nil
+		},
 	}
 }
 
@@ -26,6 +44,7 @@ func usage() {
 	fmt.Fprintln(os.Stderr, "  - diamond")
 	fmt.Fprintln(os.Stderr, "  - hollow-square")
 	fmt.Fprintln(os.Stderr, "  - right-pascal")
+	fmt.Fprintln(os.Stderr, "  - all")
 	fmt.Fprintln(os.Stderr, "\nExamples:")
 	fmt.Fprintln(os.Stderr, "  go run . -pattern diamond -size 5")
 }
@@ -35,7 +54,7 @@ func printLines(lines []string) {
 }
 
 func main() {
-	patternFlag := flag.String("pattern", "", "pattern name: right-triangle, centered-pyramid, diamond, hollow-square, right-pascal")
+	patternFlag := flag.String("pattern", "", "pattern name: right-triangle, centered-pyramid, diamond, hollow-square, right-pascal, all")
 	sizeFlag := flag.Int("size", 0, "positive integer size parameter")
 
 	flag.Usage = usage
